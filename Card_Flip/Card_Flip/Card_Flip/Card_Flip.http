@@ -1,0 +1,6 @@
+@Card_Flip_HostAddress = http://localhost:5100
+
+GET {{Card_Flip_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
