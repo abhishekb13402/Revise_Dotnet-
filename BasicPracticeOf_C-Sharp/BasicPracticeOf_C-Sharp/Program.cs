@@ -1,11 +1,8 @@
 ﻿using BasicPracticeOf_C_Sharp.Calculator;
+using BasicPracticeOf_C_Sharp.OOP;
 using BasicPracticeOf_C_Sharp.string_manipulation;
 using BasicPracticeOf_C_Sharp.Temperature_Converter;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BasicPracticeOf_C_Sharp
 {
@@ -23,7 +20,9 @@ namespace BasicPracticeOf_C_Sharp
                     Console.WriteLine("1. Calculator");
                     Console.WriteLine("2. Temperature Converter");
                     Console.WriteLine("3. String Manipulation");
-                    Console.WriteLine("4. Exit");
+                    Console.WriteLine("4. OOP Examples Animal");
+                    Console.WriteLine("5. OOP Examples Shape");
+                    Console.WriteLine("0. Exit");
 
                     int choice = Convert.ToInt32(Console.ReadLine());
 
@@ -39,6 +38,12 @@ namespace BasicPracticeOf_C_Sharp
                             String_Manipulation();
                             break;
                         case 4:
+                            OOP_Example_Animal();
+                            break;
+                        case 5:
+                            OOP_Example_Shape();
+                            break;
+                        case 0:
                             exit = true;
                             Console.WriteLine("Exiting program...");
                             break;
@@ -56,6 +61,42 @@ namespace BasicPracticeOf_C_Sharp
             Console.WriteLine("\nPress any key to exit...");
             Console.ReadKey();
 
+        }
+
+        private static void OOP_Example_Shape()
+        {
+            Circle myCircle = new Circle(5);
+            Rectangle myRectangle = new Rectangle(3, 4);
+
+            Console.WriteLine($"Circle Area: {myCircle.CalculateArea()}");
+            myCircle.Display();
+            myCircle.Draw();
+
+            Console.WriteLine();
+
+            Console.WriteLine($"Rectangle Area: {myRectangle.CalculateArea()}");
+            myRectangle.Display();
+            myRectangle.Draw();
+
+            Console.WriteLine("\nPress any key to exit...");
+            Console.ReadKey();
+
+        }
+
+        private static void OOP_Example_Animal()
+        {
+            Dog myDog = new Dog("Buddy", 3, "Labrador");
+            Cat myCat = new Cat("Whiskers", 4, true);
+
+            Console.WriteLine($"Name: {myDog.Name}, Age: {myDog.Age}, Breed: {myDog.Breed}");
+            myDog.MakeSound();
+            myDog.WhichBreed();
+
+            Console.WriteLine($"Name: {myCat.Name}, Age: {myCat.Age}, Islazy: {myCat.IsLazy}");
+            myDog.MakeSound();
+            myCat.IsItLazy();
+
+            Console.WriteLine();
         }
 
         private static void String_Manipulation()

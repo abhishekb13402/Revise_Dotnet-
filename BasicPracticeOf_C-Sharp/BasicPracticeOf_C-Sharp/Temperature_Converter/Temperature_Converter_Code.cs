@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BasicPracticeOf_C_Sharp.Temperature_Converter
+﻿namespace BasicPracticeOf_C_Sharp.Temperature_Converter
 {
     public class Temperature_Converter_Code
     {
