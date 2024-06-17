@@ -1,8 +1,9 @@
 ﻿using Practice.Data;
+using Practice.Model.Dto;
 
 namespace Practice.Repository
 {
-    public class AuthenticationRepository
+    public class AuthenticationRepository : IAuthentication
     {
         private readonly AppDbContext appDbContext;
 
@@ -10,16 +11,15 @@ namespace Practice.Repository
         {
             this.appDbContext = appDbContext;
         }
-        public bool AuthenticateUser(string UserEmail, string Password)
+        public bool AuthenticateUser(AuthenticationDto authenticationDto)
         {
-            //int rowcount = appDbContext.Users.Where(i => i.UserEmail == UserEmail && i.UserPassword == Password).Count();
-            //int rowcount = appDbContext.EmployeeDetails()
-            //if (rowcount == 0)
-            //    return false;
-            //else
-            //{
+            int rowcount = appDbContext.employeeAuths.Where(i => i.EmployeeEmail == authenticationDto.Email && i.Password == authenticationDto.Password).Count();
+            if (rowcount == 0)
+                return false;
+            else
+            {
                 return true;
-            //}
+            }
         }
     }
 }

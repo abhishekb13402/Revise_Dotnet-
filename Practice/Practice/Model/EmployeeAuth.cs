@@ -14,7 +14,7 @@ namespace Practice.Model
 
         [Required(ErrorMessage = "Email is required")]
         [ForeignKey("EmployeeEmail")]
-        public int EmployeeEmail { get; set; }
+        public string EmployeeEmail { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
         [StringLength(8)]

@@ -10,10 +10,14 @@ namespace Practice
         {
             var mappingConfig = new MapperConfiguration(configurationExpression =>
             {
+                configurationExpression.CreateMap<EmployeeAuth, AuthenticationDto>().ReverseMap();
+
                 configurationExpression.CreateMap<Employee, EmployeeDto>()
                      .ForMember(dest => dest.Details, opt => opt.MapFrom(src => src.employeeDetails))
                      .ReverseMap();
                 configurationExpression.CreateMap<EmployeeDetails, EmployeeDetailsDto>().ReverseMap();
+                configurationExpression.CreateMap<EmployeeDetails, EmployeeDto>().ReverseMap();
+
                 configurationExpression.CreateMap<EmployeeSalaryDto, SalaryDetails>().ReverseMap();
                 configurationExpression.CreateMap<EmployeeSalaryDto, EmployeeDetails>().ReverseMap();
 

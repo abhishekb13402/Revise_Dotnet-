@@ -11,6 +11,9 @@ namespace Practice.Model
         [StringLength(20)]
         public string Name { get; set; }
 
+        [Required(ErrorMessage = "Email is required")]
+        public string EmployeeEmail { get; set; }
+
         public EmployeeDetails employeeDetails { get; set; }
         public SalaryDetails salaryDetails { get; set; }
         public EmployeeAuth employeeAuth{ get; set; }

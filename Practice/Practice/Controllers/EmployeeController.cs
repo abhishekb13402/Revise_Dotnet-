@@ -21,7 +21,7 @@ namespace Practice.Controllers
         }
 
         [HttpPost]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<EmployeeDto>> AddEmployee(EmployeeDto employeeDto)
         {
             try
@@ -35,7 +35,7 @@ namespace Practice.Controllers
             }
         }
         [HttpDelete("DeleteById")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<bool>> DeleteEmployee(int id)
         {
             try
@@ -49,7 +49,7 @@ namespace Practice.Controllers
             }
         }
         [HttpPut("Update")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<bool>> UpdateEmployee(EmployeeDto employeeDto)
         {
             try
@@ -63,7 +63,7 @@ namespace Practice.Controllers
             }
         }
         [HttpDelete("DeleteByFilter-name,email")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<bool>> DeleteEmployeeByFilter(string value)
         {
             try
@@ -77,7 +77,7 @@ namespace Practice.Controllers
             }
         }
         [HttpGet("GetAll")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<EmployeeDto>> GetAll()
         {
             try
@@ -91,7 +91,7 @@ namespace Practice.Controllers
             }
         }
         [HttpGet("GetById")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<EmployeeDto>> GetById(int id)
         {
             try
@@ -105,7 +105,7 @@ namespace Practice.Controllers
             }
         }
         [HttpGet("GetByFilter-name,email")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<EmployeeDto>> GetByFilter(string value)
         {
             try

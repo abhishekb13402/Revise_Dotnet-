@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Practice.Model.Dto;
@@ -14,27 +15,28 @@ namespace Practice.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IConfiguration configuration;
-        private readonly AuthenticationRepository authenticationRepository;
+        private readonly IAuthentication authentication;
 
-        public AuthenticationController(IConfiguration configuration, AuthenticationRepository authenticationRepository)
+        public AuthenticationController(IConfiguration configuration, IAuthentication authentication)
         {
             this.configuration = configuration;
-            this.authenticationRepository = authenticationRepository;
+            this.authentication = authentication;
         }
         [HttpPost("Authentication")]
-        public object AuthenticateUser(string useremail, string password)
+        [AllowAnonymous]
+        public object AuthenticateUser(AuthenticationDto authenticationDto)
         {
-            bool isValidUser = authenticationRepository.AuthenticateUser(useremail, password);
+            bool isValidUser = authentication.AuthenticateUser(authenticationDto);
             if (isValidUser)
             {
-                return generateToken(useremail);
+                return GenerateToken(authenticationDto.Email);
             }
             else
             {
                 return new Exception("Invalid user name and password");
             }
         }
-        private string generateToken(string useremail)
+        private string GenerateToken(string useremail)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -42,8 +44,6 @@ namespace Practice.Controllers
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier,useremail),
-                //new Claim(ClaimTypes.Email,user.Email),
-
             };
             var token = new JwtSecurityToken(this.configuration["Jwt:Issuer"],
                 this.configuration["Jwt:Audience"],

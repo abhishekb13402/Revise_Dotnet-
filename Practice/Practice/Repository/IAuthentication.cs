@@ -1,6 +1,9 @@
-﻿namespace Practice.Repository
+﻿using Practice.Model.Dto;
+
+namespace Practice.Repository
 {
-    public class IAuthentication
+    public interface IAuthentication
     {
+        public bool AuthenticateUser(AuthenticationDto authenticationDto);
     }
 }

@@ -23,18 +23,18 @@ namespace Practice.Repository
             try
             {
                 var employeedata = _mapper.Map<Employee>(employeeDto);
+                employeedata.EmployeeEmail = employeeDto.EmployeeEmail;
                 await appDbContext.employees.AddAsync(employeedata);
                 await appDbContext.SaveChangesAsync();
 
-                var detailsdata = _mapper.Map<EmployeeDetails>(employeeDto);
+                var detailsdata = _mapper.Map<EmployeeDetails>(employeeDto.Details);
                 detailsdata.EmployeeId = employeedata.Id;
+                //detailsdata.DOB = employeedata.employeeDetails.DOB;
+                //detailsdata.Email = employeedata.employeeDetails.Email;
+                //detailsdata.Phone = employeedata.employeeDetails.Phone;
                 await appDbContext.EmployeeDetails.AddAsync(detailsdata);
-
-                var authdata = _mapper.Map<EmployeeAuth>(employeeDto);
-                authdata.Password = employeedata.p
-                await appDbContext.EmployeeDetails.AddAsync(detailsdata);
-
                 await appDbContext.SaveChangesAsync();
+                
                 var empdata = _mapper.Map<EmployeeDto>(employeedata);
                 return employeeDto;
             }
@@ -163,6 +163,7 @@ namespace Practice.Repository
                 }
 
                 employee.Name = employeeDto.Name;
+                employee.EmployeeEmail = employeeDto.EmployeeEmail;
 
                 if (employee.employeeDetails != null)
                 {

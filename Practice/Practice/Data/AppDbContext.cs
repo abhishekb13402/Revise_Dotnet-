@@ -16,6 +16,10 @@ namespace Practice.Data
                 .HasKey(e => e.Id);
 
             modelBuilder.Entity<Employee>()
+                .HasIndex(e => e.EmployeeEmail)
+                .IsUnique(); // Create unique constraint on EmployeeEmail
+
+            modelBuilder.Entity<Employee>()
                 .HasOne(e => e.employeeDetails)
                 .WithOne(ed => ed.employee)
                 .HasForeignKey<EmployeeDetails>(ed => ed.EmployeeId);  
@@ -35,10 +39,10 @@ namespace Practice.Data
                 .HasKey(ed => ed.Id);
 
             modelBuilder.Entity<Employee>()
-                .HasOne(e => e.employeeAuth)
-                .WithOne(e => e.employee)
-                .HasForeignKey<EmployeeAuth>(ed => ed.EmployeeId)
-                .HasForeignKey<EmployeeAuth>(ed => ed.EmployeeEmail);
+                 .HasOne(e => e.employeeAuth)
+                 .WithOne(ea => ea.employee)
+                 .HasForeignKey<EmployeeAuth>(ea => ea.EmployeeId);
+
         }
 
 
