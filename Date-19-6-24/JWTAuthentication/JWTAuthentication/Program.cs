@@ -1,22 +1,20 @@
 using AutoMapper;
+using JWTAuthentication;
+using JWTAuthentication.Data;
+using JWTAuthentication.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Practice;
-using Practice.Data;
-using Practice.Repository;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Automapper sevice
-IMapper mapper = MappingConfiguration.RegisterMaps().CreateMapper();
+// AddAuthentication
 
-var provider = builder.Services.BuildServiceProvider();
-var config = provider.GetRequiredService<IConfiguration>();
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("dbcs")));
+// Add mapper
+IMapper mapper = MappingConfiguration.RegisterMaps().CreateMapper();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
@@ -32,10 +30,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             };
         });
 
+// Add connection string
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("dbcs")));
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
+// AddSwaggerGen
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Practice.API", Version = "v1" });
@@ -65,11 +67,9 @@ builder.Services.AddSwaggerGen(c =>
     }
     });
 });
-builder.Services.AddSingleton(mapper);
 
-builder.Services.AddTransient<IEmployeeRepository,EmployeeRepository>();
+// Add lifetime service
 builder.Services.AddScoped<IAuthentication, AuthenticationRepository>();
-builder.Services.AddScoped<IMini_Games_Repository,Mini_Games_Repository>();
 
 var app = builder.Build();
 
@@ -82,8 +82,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
 app.UseAuthorization();
+app.UseAuthentication();
+
 app.MapControllers();
 
 app.Run();

@@ -1,0 +1,51 @@
+1. Install package for JWT Token
+
+Microsoft.AspNetCore.Authentication.JwtBearer
+Swashbuckle.AspNetCore.Annotations
+
+Install package for EFCore
+Microsoft.EntityFrameworkCore.SqlServer
+Microsoft.EntityFrameworkCore.Design
+Microsoft.EntityFrameworkCore.Tools
+Microsoft.EntityFrameworkCore
+
+Install package for Automapper
+Automapper
+
+2. Add below code in appsettings.json
+
+  "Jwt": {
+    "Key": "BC9E6C70-5913-49EF-BEBD-0027553F176A",
+    "Issuer": "http://localhost:7244",
+    "Audience": "http://localhost:7244"
+  }
+
+3. Add code in Program.cs
+
+AddAuthentication
+AddSwaggerGen
+app.UseAuthentication
+Add connection string
+
+4. Model
+UserAuth Model with Id,Email,Password field
+
+5. Dto
+AuthenticationDto - field Email,Password
+
+6. add-migration initial
+update-database
+
+7. Repository
+AuthenticationRepository
+
+8. Controller
+AuthenticationController
+GenerateToken
+
+9. MappingConfiguration
+changes in program.cs
+Add lifetime service
+
+add MappingConfiguration file code
+
