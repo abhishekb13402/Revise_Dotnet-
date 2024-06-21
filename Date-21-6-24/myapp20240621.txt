@@ -1,0 +1,21 @@
+2024-06-21 15:34:36.116 +05:30 [INF] Request GET: /WeatherForecast
+2024-06-21 15:34:36.180 +05:30 [INF] Request Payload: 
+2024-06-21 15:34:36.204 +05:30 [INF] Response 200: [{"date":"2024-06-22","temperatureC":27,"temperatureF":80,"summary":"Warm"},{"date":"2024-06-23","temperatureC":43,"temperatureF":109,"summary":"Sweltering"},{"date":"2024-06-24","temperatureC":6,"temperatureF":42,"summary":"Mild"},{"date":"2024-06-25","temperatureC":24,"temperatureF":75,"summary":"Warm"},{"date":"2024-06-26","temperatureC":-12,"temperatureF":11,"summary":"Hot"}]
+2024-06-21 15:35:19.965 +05:30 [INF] Request GET: /WeatherForecast
+2024-06-21 15:35:19.970 +05:30 [INF] Request Payload: 
+2024-06-21 15:35:19.975 +05:30 [INF] Response 200: [{"date":"2024-06-22","temperatureC":4,"temperatureF":39,"summary":"Bracing"},{"date":"2024-06-23","temperatureC":-14,"temperatureF":7,"summary":"Chilly"},{"date":"2024-06-24","temperatureC":47,"temperatureF":116,"summary":"Cool"},{"date":"2024-06-25","temperatureC":21,"temperatureF":69,"summary":"Balmy"},{"date":"2024-06-26","temperatureC":15,"temperatureF":58,"summary":"Bracing"}]
+2024-06-21 15:35:20.205 +05:30 [INF] Request GET: /WeatherForecast
+2024-06-21 15:35:20.206 +05:30 [INF] Request Payload: 
+2024-06-21 15:35:20.208 +05:30 [INF] Response 200: [{"date":"2024-06-22","temperatureC":-20,"temperatureF":-3,"summary":"Balmy"},{"date":"2024-06-23","temperatureC":15,"temperatureF":58,"summary":"Cool"},{"date":"2024-06-24","temperatureC":26,"temperatureF":78,"summary":"Mild"},{"date":"2024-06-25","temperatureC":11,"temperatureF":51,"summary":"Sweltering"},{"date":"2024-06-26","temperatureC":-7,"temperatureF":20,"summary":"Freezing"}]
+2024-06-21 15:35:20.387 +05:30 [INF] Request GET: /WeatherForecast
+2024-06-21 15:35:20.388 +05:30 [INF] Request Payload: 
+2024-06-21 15:35:20.389 +05:30 [INF] Response 200: [{"date":"2024-06-22","temperatureC":1,"temperatureF":33,"summary":"Freezing"},{"date":"2024-06-23","temperatureC":50,"temperatureF":121,"summary":"Freezing"},{"date":"2024-06-24","temperatureC":15,"temperatureF":58,"summary":"Scorching"},{"date":"2024-06-25","temperatureC":27,"temperatureF":80,"summary":"Mild"},{"date":"2024-06-26","temperatureC":15,"temperatureF":58,"summary":"Scorching"}]
+2024-06-21 15:35:20.573 +05:30 [INF] Request GET: /WeatherForecast
+2024-06-21 15:35:20.575 +05:30 [INF] Request Payload: 
+2024-06-21 15:35:20.576 +05:30 [INF] Response 200: [{"date":"2024-06-22","temperatureC":29,"temperatureF":84,"summary":"Scorching"},{"date":"2024-06-23","temperatureC":54,"temperatureF":129,"summary":"Balmy"},{"date":"2024-06-24","temperatureC":-9,"temperatureF":16,"summary":"Sweltering"},{"date":"2024-06-25","temperatureC":53,"temperatureF":127,"summary":"Chilly"},{"date":"2024-06-26","temperatureC":-1,"temperatureF":31,"summary":"Sweltering"}]
+2024-06-21 15:35:21.166 +05:30 [INF] Request GET: /WeatherForecast
+2024-06-21 15:35:21.167 +05:30 [INF] Request Payload: 
+2024-06-21 15:35:21.168 +05:30 [INF] Response 200: [{"date":"2024-06-22","temperatureC":36,"temperatureF":96,"summary":"Chilly"},{"date":"2024-06-23","temperatureC":-5,"temperatureF":24,"summary":"Cool"},{"date":"2024-06-24","temperatureC":43,"temperatureF":109,"summary":"Bracing"},{"date":"2024-06-25","temperatureC":16,"temperatureF":60,"summary":"Cool"},{"date":"2024-06-26","temperatureC":53,"temperatureF":127,"summary":"Sweltering"}]
+2024-06-21 15:35:21.650 +05:30 [INF] Request GET: /WeatherForecast
+2024-06-21 15:35:21.651 +05:30 [INF] Request Payload: 
+2024-06-21 15:35:21.653 +05:30 [INF] Response 200: [{"date":"2024-06-22","temperatureC":-15,"temperatureF":6,"summary":"Cool"},{"date":"2024-06-23","temperatureC":-10,"temperatureF":15,"summary":"Mild"},{"date":"2024-06-24","temperatureC":-18,"temperatureF":0,"summary":"Mild"},{"date":"2024-06-25","temperatureC":-10,"temperatureF":15,"summary":"Balmy"},{"date":"2024-06-26","temperatureC":-6,"temperatureF":22,"summary":"Hot"}]

@@ -1,0 +1,2 @@
+Serilog_LogFile_Example Details
+
