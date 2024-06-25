@@ -1,0 +1,6 @@
+@Model_DTO_Mapper_Example_HostAddress = http://localhost:5058
+
+GET {{Model_DTO_Mapper_Example_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
