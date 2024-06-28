@@ -4,6 +4,8 @@ namespace MyBank.common.Mail
 {
     public interface IMailService
     {
+        Task<bool> SendGenerateOtpEmailAsync(string otp, string Email);
+
         Task<bool> SendDepositEmailAsync(string? toEmail, double amount, int id);
         Task<bool> SendWithdrawEmailAsync(string? fromEmail, double amount, int id);
         Task<bool> SendFundTransferEmailAsync(string? toEmail, string? fromEmail, double amount, int id);

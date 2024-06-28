@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyBank.Data;
 using MyBank.Model.Dto;
+using MyBank.Repository;
 using MyBank.Repository.Interface;
 
 namespace MyBank.Controllers
@@ -20,6 +21,35 @@ namespace MyBank.Controllers
             this.myBankDbContext = myBankDbContext;
             this._accountRepository = accountRepository;
             _logger = logger;
+        }
+
+        [HttpPost("GenerateOtp")]
+        [Authorize]
+        public async Task<object> GenerateOtp(int AccountNumber)
+        {
+            var otp = _accountRepository.GenerateOtp(AccountNumber);
+            if (otp != null)
+            {
+                return true;
+            }
+            else
+            {
+                return "Generate OTP Error";
+            }
+        }
+        [HttpPost("VerifyOtp")]
+        [Authorize]
+        public async Task<object> VerifyOtp(AccountDto accountDto)
+        {
+            var otp = _accountRepository.VerifyOtp(accountDto);
+            if (otp != null)
+            {
+                return true;
+            }
+            else
+            {
+                return "Invalid OTP";
+            }
         }
 
         [Authorize]

@@ -4,6 +4,7 @@ using MailKit.Net.Smtp;
 using MimeKit;
 using System.Net.Mail;
 using Microsoft.Extensions.Options;
+using MyBank.Model;
 
 namespace MyBank.common.Mail
 {
@@ -56,5 +57,17 @@ namespace MyBank.common.Mail
             SendWithdrawEmailAsync(fromEmail, amount, id);
             return true;
         }
+
+        public async Task<bool> SendGenerateOtpEmailAsync(string otp, string Email)
+        {
+            MailRequest mailRequest = new MailRequest();
+            mailRequest.ToEmail = Email;
+            mailRequest.Subject = "OTP Confirmation";
+            mailRequest.Body = $"OTP is: {otp}";
+            await SendEmailAsync(mailRequest);
+            return true;
+        }
+
+
     }
 }

@@ -14,6 +14,7 @@ namespace MyBank
                 configurationExpression.CreateMap<Account, AccountDto>().ReverseMap();
 
                 configurationExpression.CreateMap<Person, AccoutPersonDetailsDto>().ReverseMap();
+                //configurationExpression.CreateMap<OTP, OTPDto>().ReverseMap();
 
                 configurationExpression.CreateMap<Account, AccoutPersonDetailsDto>()
                    .ForMember(dest => dest.Account, opt => opt.MapFrom(src => src))

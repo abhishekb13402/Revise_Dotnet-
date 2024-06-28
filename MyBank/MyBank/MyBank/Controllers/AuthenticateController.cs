@@ -36,6 +36,7 @@ namespace MyBank.Controllers
                 return "Invalid user name and password";
             }
         }
+      
         private string GenerateToken(string useremail)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.configuration["Jwt:Key"]));

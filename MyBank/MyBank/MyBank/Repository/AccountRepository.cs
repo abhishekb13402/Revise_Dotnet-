@@ -307,7 +307,6 @@ namespace MyBank.Repository
             }
         }
 
-
         public async Task<object> GetAllAccounts()
         {
             try
@@ -326,5 +325,32 @@ namespace MyBank.Repository
             }
         }
 
+        public async Task<object> GenerateOtp(int AccountNumber)
+        {
+            var user = myBankDbContext.Account
+                .Include(a => a.Person)
+                .FirstOrDefault(Account => Account.Id == AccountNumber);
+            if (user == null)
+            { return false; }
+            string data = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890";
+            var charotp = new char[6];
+            Random random = new Random();
+            for(int i = 0; i < charotp.Length; i++)
+            {
+                charotp[i]= data[random.Next(data.Length)];
+            }
+            string otp = new string(charotp);
+
+            //add in account tbl
+            var emailstatus = await mailService.SendGenerateOtpEmailAsync(otp, user.Person.Email);
+            if (!emailstatus)
+            { throw new Exception("Email sending err"); }
+            return true;
+        }
+
+        public async Task<object> VerifyOtp(AccountDto accountDto)
+        {
+            return true;
+        }
     }
 }
