@@ -25,7 +25,7 @@ namespace Serilog_LogFile_Example.Controllers
         {
             _logger.LogInformation("Serilog is Working");
             //_logger.LogError("Test err");
-            _logger.LogTrace
+            //_logger.LogTrace
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
