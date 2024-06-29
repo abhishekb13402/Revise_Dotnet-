@@ -58,12 +58,12 @@ namespace MyBank.common.Mail
             return true;
         }
 
-        public async Task<bool> SendGenerateOtpEmailAsync(string otp, string Email)
+        public async Task<bool> SendGenerateOtpEmailAsync(string otp, string Email, DateTime ExpiryTime)
         {
             MailRequest mailRequest = new MailRequest();
             mailRequest.ToEmail = Email;
             mailRequest.Subject = "OTP Confirmation";
-            mailRequest.Body = $"OTP is: {otp}";
+            mailRequest.Body = $"OTP is: {otp} \n \n Valid till : {ExpiryTime}";
             await SendEmailAsync(mailRequest);
             return true;
         }

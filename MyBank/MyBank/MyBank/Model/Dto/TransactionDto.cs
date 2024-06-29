@@ -7,10 +7,9 @@ namespace MyBank.Model.Dto
     {
         public int Id { get; set; }
         public int PersonId { get; set; }
-        public int FromAccountId { get; set; }
-        public int ToAccountId { get; set; }
+        public int FromAccountId { get; set; }//sender self
+        public int ToAccountId { get; set; }//receiver another acc
         public double Amount { get; set; }
         public TransactionType transactionType { get; set; }
-        //public DateTime TimeStamp { get; set; }
     }
 }

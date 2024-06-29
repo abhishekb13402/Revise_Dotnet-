@@ -27,28 +27,40 @@ namespace MyBank.Controllers
         [Authorize]
         public async Task<object> GenerateOtp(int AccountNumber)
         {
-            var otp = _accountRepository.GenerateOtp(AccountNumber);
-            if (otp != null)
+            try
             {
-                return true;
+                var otp = _accountRepository.GenerateOtp(AccountNumber);
+                if (otp != null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return "Generate OTP Error";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return "Generate OTP Error";
+                return "OTP Generation Error";
             }
         }
         [HttpPost("VerifyOtp")]
         [Authorize]
-        public async Task<object> VerifyOtp(AccountDto accountDto)
+        public async Task<object> VerifyOtp(OTPDto oTPDto)
         {
-            var otp = _accountRepository.VerifyOtp(accountDto);
-            if (otp != null)
+            try{
+                var otp = _accountRepository.VerifyOtp(oTPDto);
+                if (!otp)
+                {
+                    return "Invalid OTP";
+                }
+                else
+                {
+                    return true + "\n\nValid OTP You can Perform Transaction";
+                }
+            }catch (Exception ex)
             {
-                return true;
-            }
-            else
-            {
-                return "Invalid OTP";
+                return "OTP Verification Error";
             }
         }
 
@@ -77,7 +89,7 @@ namespace MyBank.Controllers
             {
                 var result = await _accountRepository.AddTransaction(transactionDto);
                 _logger.LogInformation($"{result}");
-                return Ok(result);
+                return result;
             }
             catch (Exception ex)
             {

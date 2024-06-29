@@ -5,6 +5,8 @@ using MyBank.Data;
 using MyBank.Model;
 using MyBank.Model.Dto;
 using MyBank.Repository.Interface;
+using Org.BouncyCastle.Asn1.Cms;
+using static System.Net.WebRequestMethods;
 
 namespace MyBank.Repository
 {
@@ -63,10 +65,20 @@ namespace MyBank.Repository
         {
             try
             {
+                var isotpverify = myBankDbContext.Account
+                    .Where(Account => Account.Id == transactionDto.FromAccountId)
+                    .Where(useflag => useflag.IsUsed == true)
+                    .Count();
+                //1->verify true
+                //o->no verify false
+                if (isotpverify == 0)
+                {
+                    return "PLEASE VERIFY OTP FIRST.";
+                }
                 if (transactionDto == null)
                 {
                     //_logger.LogWarning("EMPTY FIELDS.");
-                    return "EMPTY FIELDS.";
+                    return "EMPTY FIELDS. OR PLEASE VERIFY OTP FIRST.";
                 }
                 else if (!ValidateParameters(transactionDto))
                 {
@@ -127,6 +139,7 @@ namespace MyBank.Repository
                 return false;
             }
         }
+
         private bool ExistAccountId(int accountId)
         {
             return myBankDbContext.Account
@@ -163,7 +176,7 @@ namespace MyBank.Repository
                 var currentbalancetoAccount = toAccount.Balance += transactionDto.Amount;
 
                 var transaction = _mapper.Map<MyTransactions>(transactionDto);
-                transaction.TimeStamp = DateTime.UtcNow; 
+                transaction.TimeStamp = DateTime.UtcNow;
                 await myBankDbContext.MyTransactions.AddAsync(transaction);
                 await myBankDbContext.SaveChangesAsync();
 
@@ -173,16 +186,16 @@ namespace MyBank.Repository
                                select p.Email).FirstOrDefault();
 
                 var fromEmail = (from a in myBankDbContext.Account
-                               join p in myBankDbContext.Person on a.PersonId equals p.Id
-                               where a.Id == transactionDto.FromAccountId
-                               select p.Email).FirstOrDefault();
+                                 join p in myBankDbContext.Person on a.PersonId equals p.Id
+                                 where a.Id == transactionDto.FromAccountId
+                                 select p.Email).FirstOrDefault();
 
                 var emailstatus = await mailService.SendFundTransferEmailAsync(toEmail, fromEmail, transactionDto.Amount, fromAccount.Id);
                 if (!emailstatus)
                 { throw new Exception("Email sending err"); }
 
                 _logger.LogInformation($"Transaction FundFransfer done successfull : {transaction}");
-                
+
                 DBtransaction.Commit();
 
                 return true;
@@ -218,14 +231,14 @@ namespace MyBank.Repository
                 }
 
                 var transaction = _mapper.Map<MyTransactions>(transactionDto);
-                transaction.TimeStamp = DateTime.UtcNow; 
+                transaction.TimeStamp = DateTime.UtcNow;
                 await myBankDbContext.MyTransactions.AddAsync(transaction);
                 await myBankDbContext.SaveChangesAsync();
 
                 var fromEmail = (from a in myBankDbContext.Account
-                               join p in myBankDbContext.Person on a.PersonId equals p.Id
-                               where a.Id == transactionDto.ToAccountId
-                               select p.Email).FirstOrDefault();
+                                 join p in myBankDbContext.Person on a.PersonId equals p.Id
+                                 where a.Id == transactionDto.ToAccountId
+                                 select p.Email).FirstOrDefault();
 
                 var emailstatus = await mailService.SendWithdrawEmailAsync(fromEmail, transactionDto.Amount, fromAccount.Id);
                 if (!emailstatus)
@@ -268,7 +281,7 @@ namespace MyBank.Repository
                                select p.Email).FirstOrDefault();
 
                 var emailstatus = await mailService.SendDepositEmailAsync(toEmail, transactionDto.Amount, toAccount.Id);
-                if(!emailstatus)
+                if (!emailstatus)
                 { throw new Exception("Email sending err"); }
                 DBtransaction.Commit();
 
@@ -327,30 +340,88 @@ namespace MyBank.Repository
 
         public async Task<object> GenerateOtp(int AccountNumber)
         {
-            var user = myBankDbContext.Account
+            try
+            {
+                var existtrueotp = myBankDbContext.Account
+                    .Where(Account => Account.Id == AccountNumber)
+                    //.Where(time => time.ExpiryTime < DateTime.Now)
+                    .Where(isusedflag => isusedflag.IsUsed == true)
+                    .Count();
+
+                if (existtrueotp == 1)
+                {
+                    ExistTrueOTPStatusChange(AccountNumber);
+                }
+
+                var user = myBankDbContext.Account
                 .Include(a => a.Person)
                 .FirstOrDefault(Account => Account.Id == AccountNumber);
-            if (user == null)
-            { return false; }
-            string data = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890";
-            var charotp = new char[6];
-            Random random = new Random();
-            for(int i = 0; i < charotp.Length; i++)
-            {
-                charotp[i]= data[random.Next(data.Length)];
-            }
-            string otp = new string(charotp);
+                if (user == null)
+                { return "Account Number is Invalid"; }
 
-            //add in account tbl
-            var emailstatus = await mailService.SendGenerateOtpEmailAsync(otp, user.Person.Email);
-            if (!emailstatus)
-            { throw new Exception("Email sending err"); }
-            return true;
+                string data = "QWERTYUIOPASDFGHJKLZXCVBNM1234567890qwertyuiopasdfghjklzxcvbnm";
+                var charotp = new char[6];
+                Random random = new Random();
+                for (int i = 0; i < charotp.Length; i++)
+                {
+                    charotp[i] = data[random.Next(data.Length)];
+                }
+                string otp = new string(charotp);
+                user.ExpiryTime = DateTime.Now.AddMinutes(2);
+                //user.IsUsed = true;
+                user.OTPValue = otp;
+                myBankDbContext.Account.Update(user);
+                myBankDbContext.SaveChanges();
+                //add in account tbl
+
+                var emailstatus = await mailService.SendGenerateOtpEmailAsync(otp, user.Person.Email, user.ExpiryTime);
+                if (!emailstatus)
+                { throw new Exception("Email sending err"); }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
-        public async Task<object> VerifyOtp(AccountDto accountDto)
+        private void ExistTrueOTPStatusChange(int AccountNumber)
         {
-            return true;
+            var user = myBankDbContext.Account
+               .Include(a => a.Person)
+               .FirstOrDefault(Account => Account.Id == AccountNumber);
+            user.IsUsed = false;
+            myBankDbContext.Account.Update(user);
+            myBankDbContext.SaveChanges();
+        }
+
+        public bool VerifyOtp(OTPDto oTPDto)
+        {
+            try
+            {
+                var isvalidotp = myBankDbContext.Account
+                    .Where(ano => ano.Id == oTPDto.AccountNumber)
+                    .Where(otp => otp.OTPValue == oTPDto.OtpValue)
+                    .Where(used => used.IsUsed == false)
+                    .Where(exptime => exptime.ExpiryTime > DateTime.Now)
+                    .FirstOrDefault();
+                if (isvalidotp == null)
+                { return false; }
+
+                var existinguser = myBankDbContext.Account
+                    .FirstOrDefault(Account => Account.Id == oTPDto.AccountNumber);
+                if (existinguser.IsUsed == false)
+                {
+                    existinguser.IsUsed = true;
+                    myBankDbContext.Account.Update(existinguser);
+                    myBankDbContext.SaveChanges();
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

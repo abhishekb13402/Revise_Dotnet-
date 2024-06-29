@@ -11,6 +11,6 @@ namespace MyBank.Repository.Interface
         Task<object> AddAccount(AccountDto accountDto);
         Task<object> AddTransaction(TransactionDto transactionDto);
         Task<object> GenerateOtp(int AccountNumber);
-        Task<object> VerifyOtp(AccountDto accountDto);
+        public bool VerifyOtp(OTPDto oTPDto);
     }
 }

@@ -9,8 +9,8 @@ namespace MyBank.Model.Dto
         public AccountType accounttype { get; set; }
         public double Balance { get; set; }
         //public PersonDto Person { get; set; }
-        public string OTPValue { get; set; }
-        public DateTime ExpiryTime { get; set; }
-        public bool IsUsed { get; set; } = false;
+        //public string OTPValue { get; set; }
+        //public DateTime ExpiryTime { get; set; }
+        //public bool IsUsed { get; set; } = false;
     }
 }
