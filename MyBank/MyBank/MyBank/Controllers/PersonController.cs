@@ -21,7 +21,7 @@ namespace MyBank.Controllers
             this._personRepository = personRepository;
             _logger = logger;
         }
-        
+
         [Authorize]
         [HttpPost]
         public async Task<ActionResult<PersonDto>> AddPerson(PersonDto personDto)

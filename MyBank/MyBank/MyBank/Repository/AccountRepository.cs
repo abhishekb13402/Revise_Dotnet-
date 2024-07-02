@@ -24,7 +24,7 @@ namespace MyBank.Repository
             _logger = logger;
             this.mailService = mailService;
         }
-        public async Task<object> AddAccount(AccountDto accountDto)
+        public async Task<object> AddAccount(AccountDto accountDto,int personid)
         {
             try
             {
@@ -41,15 +41,16 @@ namespace MyBank.Repository
                 }
 
                 var existdata = myBankDbContext.Account
-                    .Where(a => a.PersonId == accountDto.PersonId)
+                    .Where(a => a.PersonId == personid)
                     .Where(b => b.accounttype == accountDto.accounttype).Count();
                 if (existdata > 0)
                 {
                     //_logger.LogWarning($"ALREADY ACCOUNT IS CREATED WITH PersonId = {accountDto.PersonId} and AccountType = {accountDto.accounttype}");
-                    return $"ALREADY ACCOUNT IS CREATED WITH PersonId = {accountDto.PersonId} and AccountType = {accountDto.accounttype}";
+                    return $"ALREADY ACCOUNT IS CREATED WITH PersonId = {personid} and AccountType = {accountDto.accounttype}";
                 }
 
                 var accountdata = _mapper.Map<Account>(accountDto);
+                accountdata.PersonId = personid;
                 await myBankDbContext.Account.AddAsync(accountdata);
                 await myBankDbContext.SaveChangesAsync();
                 _logger.LogInformation("Successfully AddAccount");
@@ -67,7 +68,7 @@ namespace MyBank.Repository
             {
                 var isotpverify = myBankDbContext.Account
                     .Where(Account => Account.Id == transactionDto.FromAccountId)
-                    .Where(useflag => useflag.IsUsed == true)
+                    .Where(useflag => useflag.IsOTPVerify == true)
                     .Count();
                 //1->verify true
                 //o->no verify false
@@ -195,6 +196,7 @@ namespace MyBank.Repository
                 { throw new Exception("Email sending err"); }
 
                 _logger.LogInformation($"Transaction FundFransfer done successfull : {transaction}");
+                ResetOtpFlag(transactionDto);
 
                 DBtransaction.Commit();
 
@@ -244,6 +246,7 @@ namespace MyBank.Repository
                 if (!emailstatus)
                 { throw new Exception("Email sending err"); }
                 _logger.LogInformation($"Transaction Withdraw done successfull : {transaction}");
+                ResetOtpFlag(transactionDto);
                 DBtransaction.Commit();
 
                 return true;
@@ -283,6 +286,7 @@ namespace MyBank.Repository
                 var emailstatus = await mailService.SendDepositEmailAsync(toEmail, transactionDto.Amount, toAccount.Id);
                 if (!emailstatus)
                 { throw new Exception("Email sending err"); }
+                ResetOtpFlag(transactionDto);
                 DBtransaction.Commit();
 
                 return true;
@@ -293,6 +297,16 @@ namespace MyBank.Repository
                 _logger.LogError($"Rollback : {ex.Message}", ex);
                 return false;
             }
+        }
+
+        private void ResetOtpFlag(TransactionDto transactionDto)
+        {
+            var toAccount = myBankDbContext.Account.FirstOrDefault(a => a.Id == transactionDto.ToAccountId);
+            toAccount.IsOTPVerify = false;
+            toAccount.OTPValue = null;
+            //toAccount.IsOTPUsed = false;
+            myBankDbContext.Update(toAccount);
+            myBankDbContext.SaveChanges();
         }
 
         public async Task<object> GetAccDetailsByAccountId(int id)
@@ -344,8 +358,7 @@ namespace MyBank.Repository
             {
                 var existtrueotp = myBankDbContext.Account
                     .Where(Account => Account.Id == AccountNumber)
-                    //.Where(time => time.ExpiryTime < DateTime.Now)
-                    .Where(isusedflag => isusedflag.IsUsed == true)
+                    .Where(isverifyflag => isverifyflag.IsOTPVerify == true)
                     .Count();
 
                 if (existtrueotp == 1)
@@ -388,9 +401,10 @@ namespace MyBank.Repository
         private void ExistTrueOTPStatusChange(int AccountNumber)
         {
             var user = myBankDbContext.Account
-               .Include(a => a.Person)
+               //.Include(a => a.Person)
                .FirstOrDefault(Account => Account.Id == AccountNumber);
-            user.IsUsed = false;
+            user.IsOTPVerify = false;
+            //user.IsOTPUsed = false;
             myBankDbContext.Account.Update(user);
             myBankDbContext.SaveChanges();
         }
@@ -402,7 +416,7 @@ namespace MyBank.Repository
                 var isvalidotp = myBankDbContext.Account
                     .Where(ano => ano.Id == oTPDto.AccountNumber)
                     .Where(otp => otp.OTPValue == oTPDto.OtpValue)
-                    .Where(used => used.IsUsed == false)
+                    .Where(used => used.IsOTPVerify == false)
                     .Where(exptime => exptime.ExpiryTime > DateTime.Now)
                     .FirstOrDefault();
                 if (isvalidotp == null)
@@ -410,9 +424,9 @@ namespace MyBank.Repository
 
                 var existinguser = myBankDbContext.Account
                     .FirstOrDefault(Account => Account.Id == oTPDto.AccountNumber);
-                if (existinguser.IsUsed == false)
+                if (existinguser.IsOTPVerify == false)
                 {
-                    existinguser.IsUsed = true;
+                    existinguser.IsOTPVerify = true;
                     myBankDbContext.Account.Update(existinguser);
                     myBankDbContext.SaveChanges();
                 }
@@ -421,6 +435,30 @@ namespace MyBank.Repository
             catch (Exception ex)
             {
                 return false;
+            }
+        }
+
+        public object GetAllTransaction(int pageNumber, int pageSize = 10)
+        {
+            try
+            {
+                var transactions = myBankDbContext.MyTransactions
+                    .OrderBy(t => t.TimeStamp)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                return new
+                {
+                    TotalCount = myBankDbContext.MyTransactions.Count(),
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    Transactions = transactions
+                };
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error retrieving transactions");
             }
         }
     }

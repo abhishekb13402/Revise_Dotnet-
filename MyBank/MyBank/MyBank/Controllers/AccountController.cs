@@ -64,22 +64,22 @@ namespace MyBank.Controllers
             }
         }
 
-        [Authorize]
-        [HttpPost("AddAccount")]
-        public async Task<object> AddAccount(AccountDto accountDto)
-        {
-            try
-            {
-                var result = await _accountRepository.AddAccount(accountDto);
-                _logger.LogInformation("AddAccount.");
-                return result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error while AddAccount:{ex}");
-                throw ex;
-            }
-        }
+        //[Authorize]
+        //[HttpPost("AddAccount")]
+        //public async Task<object> AddAccount(AccountDto accountDto)
+        //{
+        //    try
+        //    {
+        //        var result = await _accountRepository.AddAccount(accountDto,);
+        //        _logger.LogInformation("AddAccount.");
+        //        return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError($"Error while AddAccount:{ex}");
+        //        throw ex;
+        //    }
+        //}
 
         [Authorize]
         [HttpPost("AddTransaction")]
@@ -129,6 +129,21 @@ namespace MyBank.Controllers
             {
                 _logger.LogError($"Error while GetAccDetailsByAccountId : {ex.Message}", ex);
                 throw ex;
+            }
+        }
+
+        [Authorize]
+        [HttpGet("GetAllTransaction")]
+        public IActionResult GetAllTransaction(int pageNumber = 1, int pageSize = 10)
+        {
+            try
+            {
+                var transactions = _accountRepository.GetAllTransaction(pageNumber, pageSize);
+                return Ok(transactions);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error retrieving transactions: " + ex.Message);
             }
         }
     }

@@ -16,14 +16,15 @@ namespace MyBank.Model
 
         [Required]
         public double Balance { get; set; }
-        [Required]
-        public string OTPValue { get; set; }
+
+        public string? OTPValue { get; set; }
 
         [Required]
         public DateTime ExpiryTime { get; set; }
 
         [Required]
-        public bool IsUsed { get; set; } = false;
+        public bool IsOTPVerify { get; set; } = false;
+
         public ICollection<MyTransactions> TransactionsFrom { get; set; }
         public ICollection<MyTransactions> TransactionsTo { get; set; }
     }

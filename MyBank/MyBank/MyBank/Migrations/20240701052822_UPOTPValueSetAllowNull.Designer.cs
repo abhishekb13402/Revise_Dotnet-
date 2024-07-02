@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyBank.Data;
 
@@ -11,9 +12,11 @@ using MyBank.Data;
 namespace MyBank.Migrations
 {
     [DbContext(typeof(MyBankDbContext))]
-    partial class MyBankDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240701052822_UPOTPValueSetAllowNull")]
+    partial class UPOTPValueSetAllowNull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +39,7 @@ namespace MyBank.Migrations
                     b.Property<DateTime>("ExpiryTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsOTPVerify")
+                    b.Property<bool>("IsUsed")
                         .HasColumnType("bit");
 
                     b.Property<string>("OTPValue")

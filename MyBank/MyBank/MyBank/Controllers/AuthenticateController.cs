@@ -55,5 +55,7 @@ namespace MyBank.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+      
     }
 }

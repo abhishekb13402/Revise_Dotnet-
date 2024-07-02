@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MyBank;
 using MyBank.common.Mail;
+using MyBank.common.Service;
 using MyBank.Data;
 using MyBank.Repository;
 using MyBank.Repository.Interface;
@@ -74,10 +75,12 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 builder.Services.AddSingleton(mapper);
+builder.Services.AddSingleton<IHostedService, BirthdayEmailJob>();
 
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IMailService, MailService>();
+
 builder.Services.AddScoped<IAuthenticateRepository, AuthenticateRepository>();
 
 var app = builder.Build();

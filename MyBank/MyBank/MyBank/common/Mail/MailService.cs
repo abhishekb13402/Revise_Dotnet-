@@ -32,6 +32,16 @@ namespace MyBank.common.Mail
             await smtp.SendAsync(email);
             smtp.Disconnect(true);
         }
+
+        public async Task SendBirthdayEmailAsync(string toEmail, string firstName)
+        {
+            MailRequest mailRequest = new MailRequest();
+            mailRequest.ToEmail = toEmail;
+            mailRequest.Subject = $"Happy Birthday {firstName}.";
+            mailRequest.Body = $"Happy Birthday {firstName}.";
+            await SendEmailAsync(mailRequest);
+        }
+
         public async Task<bool> SendDepositEmailAsync(string? toEmail, double amount, int id)
         {
             MailRequest mailRequest = new MailRequest();
