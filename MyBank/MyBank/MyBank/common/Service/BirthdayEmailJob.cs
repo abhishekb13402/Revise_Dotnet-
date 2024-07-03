@@ -7,7 +7,7 @@ namespace MyBank.common.Service
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public BirthdayEmailJob(IServiceProvider serviceProvider) : base("28 18 * * *", TimeZoneInfo.Local) 
+        public BirthdayEmailJob(IServiceProvider serviceProvider) : base("20 11 * * *", TimeZoneInfo.Local) 
         {
             _serviceProvider = serviceProvider;
         }

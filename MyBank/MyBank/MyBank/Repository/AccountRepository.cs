@@ -69,6 +69,7 @@ namespace MyBank.Repository
                 var isotpverify = myBankDbContext.Account
                     .Where(Account => Account.Id == transactionDto.FromAccountId)
                     .Where(useflag => useflag.IsOTPVerify == true)
+                    .Where(time => time.ExpiryTime > DateTime.Now)
                     .Count();
                 //1->verify true
                 //o->no verify false
