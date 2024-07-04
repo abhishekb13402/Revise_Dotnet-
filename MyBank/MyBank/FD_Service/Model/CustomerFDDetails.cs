@@ -18,6 +18,7 @@ namespace FD_Service.Model
 
         [ForeignKey("FDPlan")]
         [Required(ErrorMessage = "Plan is required")]
+       // public PlanType Plan { get; set; }
         public string Plan { get; set; }
         [Required]
         public DateOnly StartDate { get; set; }
@@ -27,5 +28,14 @@ namespace FD_Service.Model
 
         [Required]
         public double MaturityAmount { get; set; }
+
+        [Required]
+        public double TotalAmount { get; set; }
     }
+    //public enum PlanType
+    //{
+    //    A,
+    //    B,
+    //    C
+    //}
 }

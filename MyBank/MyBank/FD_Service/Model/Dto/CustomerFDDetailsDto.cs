@@ -10,7 +10,5 @@ namespace FD_Service.Model.Dto
         public double Amount { get; set; }
         public string Plan { get; set; }
         public DateOnly StartDate { get; set; }
-        public DateOnly EndDate { get; set; }
-        public double MaturityAmount { get; set; }
     }
 }

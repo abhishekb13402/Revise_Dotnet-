@@ -23,6 +23,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton(mapper);
 builder.Services.AddScoped<IFDDetailsRepository, FDDetailsRepository>();
+builder.Services.AddScoped<ICustomerFDDetailsRepository, CustomerFDDetailsRepository>();
+builder.Services.AddScoped<IMaturityAmountCalculation, MaturityAmountCalculationRepository>();
 
 
 var app = builder.Build();
