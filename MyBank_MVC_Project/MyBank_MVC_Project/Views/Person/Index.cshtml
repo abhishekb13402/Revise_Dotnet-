@@ -1,0 +1,44 @@
+﻿@using MyBank_MVC_Project.Models.Account
+@using MyBank_MVC_Project.Models.Dto
+@{
+    ViewData["Title"] = "Person Page";
+}
+
+@model List<PersonDto>
+<div class="text-center">
+    <h1 class="display-4">Welcome To Person Section</h1>
+
+    <a asp-controller="Person" asp-action="AddPersonForm" class="btn btn-primary">Add Person</a>
+
+    <div class="text-center">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>First Name</th>
+                    <th>Lat Name</th>
+                    <th>DOB</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach(var person in Model)
+                    {
+                        <tr>
+                            <td>@person.Id</td>
+                            <td>@person.FirstName</td>
+                            <td>@person.LastName</td>
+                            <td>@person.DOB</td>
+                            <td>@person.Email</td>
+                            <td>@person.PhoneNumber</td>
+                            <td>@person.AccountDto</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>

@@ -1,5 +1,51 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using MyBank_MVC_Project.Models.Account
 @{
+    ViewData["Title"] = "Account Page";
 }
+
+@model Account
+
+<div class="text-center">
+    <h1 class="display-4">Welcome To Account Section</h1>
+
+    @* navu j view banavvu *@
+    <form asp-action="GenerateOTP" asp-controller="Account">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input class="form-control" type="number" placeholder="Account Number" asp-for="Id" />
+                    </td>
+                    <td>
+                        <a asp-controller="Account" asp-action="GenerateOTP" class="btn btn-primary">GenerateOTP</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <form asp-action="VerifyOTP" asp-controller="Account">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input class="form-control mt-4" type="number" placeholder="Account Number" asp-for="Id" />
+                        <input class="form-control mt-4" type="text" placeholder="OTP Value" asp-for="OTPValue" />
+               
+                        <a asp-controller="Account" asp-action="VerifyOTP" class="btn btn-primary mt-4">VerifyOTP</a>
+                    </td>
+                </tr>
+            </tbody>
+    </form>
+
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <a asp-controller="Account" asp-action="GetAllTransactions" class="btn btn-primary">Get All Transactions</a>
+                    <a asp-controller="Account" asp-action="MakeTransaction" class="btn btn-primary">Make Transaction</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

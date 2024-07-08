@@ -49,10 +49,10 @@ namespace MyBank_MVC_Project.Repository
             try
             {
                 var data = await myBankDbContext.Person.ToListAsync();
-                if (data == null)
+                if (data == null || data.Count == 0)
                 {
                     _logger.LogWarning(204, "Not Found");
-                    return null;
+                    return new List<PersonDto>(); // Return an empty list instead of null
                 }
                 _logger.LogInformation("GetAllPersons Repository method Called...");
                 return _mapper.Map<List<PersonDto>>(data);

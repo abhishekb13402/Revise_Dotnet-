@@ -1,0 +1,124 @@
+﻿@using MyBank_MVC_Project.Models.Account
+@using MyBank_MVC_Project.Models.Dto
+@{
+    ViewData["Title"] = "Add Person Form Page";
+}
+
+@model PersonDto
+
+<div>
+    <h1 class="display-4">Add Person And Account Information Form</h1>
+
+    <form asp-action="AddPerson" asp-controller="Person">
+        <table class="table">
+            <tr>
+                <td>
+                    @* <label class="m-4 fw-bolder">Id</label> *@
+                </td>
+                <td>
+                    <input hidden class="form-control" type="number" placeholder="0" asp-for="Id" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="m-4 fw-bolder">First Name</label>
+                </td>
+                <td>
+                    <input class="form-control" type="text" placeholder="First Name" asp-for="FirstName" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="m-4 fw-bolder">Last Name</label>
+                </td>
+                <td>
+                    <input class="form-control" type="text" placeholder="Last Name" asp-for="LastName" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="m-4 fw-bolder">DOB</label>
+                </td>
+                <td>
+                    <input class="form-control" type="date" placeholder="DOB" asp-for="DOB" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="m-4 fw-bolder">Email</label>
+                </td>
+                <td>
+                    <input class="form-control" type="email" placeholder="Email" asp-for="Email" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="m-4 fw-bolder">Password</label>
+                </td>
+                <td>
+                    <input class="form-control" type="password" placeholder="Password" asp-for="Password" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="m-4 fw-bolder">Phone Number</label>
+                </td>
+                <td>
+                    <input class="form-control" type="tel" placeholder="Phone Number" asp-for="PhoneNumber" />
+                </td>
+            </tr>
+
+            @* Account related information *@
+            <tr>
+                <td>
+                    @* <label class="m-4 fw-bolder">Id</label> *@
+                </td>
+                <td>
+                    <input hidden class="form-control" type="number" placeholder="0" asp-for="AccountDto.Id" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="m-4 fw-bolder">Account Type</label>
+                </td>
+                <td>
+                    <select asp-for="AccountDto.accounttype" asp-items="ViewBag.accounttype" class="form-control">
+                        <option value="">-- Select Account Type --</option>
+                        <option value="Saving">Saving</option>
+                        <option value="Current">Current</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="m-4 fw-bolder">Balance</label>
+                </td>
+                <td>
+                    <input class="form-control" type="tel" placeholder="Balance" asp-for="AccountDto.Balance" />
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <button class="btn btn-primary mt-4" type="submit">Add Person</button>
+                </td>
+            </tr>
+        </table>
+
+
+
+
+
+
+
+
+    </form>
+</div>
