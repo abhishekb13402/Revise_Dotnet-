@@ -8,34 +8,46 @@
 <div class="text-center">
     <h1 class="display-4">Welcome To Account Section</h1>
 
-    @* navu j view banavvu *@
-    <form asp-action="GenerateOTP" asp-controller="Account">
+    @if (ViewData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@ViewData["ErrorMessage"]</div>
+    }
+
+    @if (ViewData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@ViewData["SuccessMessage"]</div>
+    }
+
+    <form asp-action="GenerateOTP" asp-controller="Account" method="post">
         <table class="table">
             <tbody>
                 <tr>
                     <td>
-                        <input class="form-control" type="number" placeholder="Account Number" asp-for="Id" />
-                    </td>
-                    <td>
-                        <a asp-controller="Account" asp-action="GenerateOTP" class="btn btn-primary">GenerateOTP</a>
+                        <input class="form-control" type="number" placeholder="Account Number" name="accountno" required />
+                        <button class="btn btn-primary mt-4" type="submit">GenerateOTP</button>
                     </td>
                 </tr>
             </tbody>
         </table>
     </form>
 
-    <form asp-action="VerifyOTP" asp-controller="Account">
+    <form asp-action="VerifyOTP" asp-controller="Account" method="post">
         <table class="table">
             <tbody>
                 <tr>
                     <td>
-                        <input class="form-control mt-4" type="number" placeholder="Account Number" asp-for="Id" />
-                        <input class="form-control mt-4" type="text" placeholder="OTP Value" asp-for="OTPValue" />
-               
-                        <a asp-controller="Account" asp-action="VerifyOTP" class="btn btn-primary mt-4">VerifyOTP</a>
+@* 
+                        <input class="form-control mt-4" type="number" placeholder="Account Number" name="accountno" asp-for="Id" required />
+                        <input class="form-control mt-4" type="text" placeholder="OTP Value" name="otpvalue" asp-for="OTPValue" required /> *@
+                       
+                        <input class="form-control mt-4" type="number" placeholder="Account Number" name="AccountNumber" required />
+                        <input class="form-control mt-4" type="text" placeholder="OTP Value" name="OtpValue" required />
+
+                        <button class="btn btn-primary mt-4" type="submit">VerifyOTP</button>
                     </td>
                 </tr>
             </tbody>
+        </table>
     </form>
 
     <table>

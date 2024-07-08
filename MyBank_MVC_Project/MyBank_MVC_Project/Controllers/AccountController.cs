@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyBank_MVC_Project.Models.Dto;
 using MyBank_MVC_Project.Repository.Interface;
 
 namespace MyBank_MVC_Project.Controllers
@@ -16,15 +17,37 @@ namespace MyBank_MVC_Project.Controllers
             return View();
         }
 
-        public IActionResult GenerateOTP(int accountno)
+        public async Task<IActionResult> GenerateOTP(int accountno)
         {
-            _accountRepository.GenerateOtp(accountno);
-            return View();
-        }
+            var result = await _accountRepository.GenerateOtp(accountno);
+          
+            if (result is true)
+            {
+                ViewData["SuccessMessage"] = "OTP has been generated and sent to your email.";
+            }
+            else
+            {
+                ViewData["ErrorMessage"] = "An unexpected error occurred.";
+            }
 
-        public IActionResult VerifyOTP()
+            return RedirectToAction("Index");
+        }
+       
+        public IActionResult VerifyOTP(OTPDto oTPDto)
         {
-            return View();
+            var result = _accountRepository.VerifyOtp(oTPDto);
+
+            if (result)
+            {
+                ViewData["SuccessMessage"] = "OTP has been Verify.";
+            }
+            else
+            {
+                ViewData["ErrorMessage"] = "An unexpected error occurred.";
+            }
+
+            return RedirectToAction("Index");
+
         }
 
         public IActionResult GetAllTransactions()
