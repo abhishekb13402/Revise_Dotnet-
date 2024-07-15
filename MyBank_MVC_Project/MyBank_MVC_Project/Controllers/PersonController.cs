@@ -27,7 +27,6 @@ namespace MyBank_MVC_Project.Controllers
         public async Task<IActionResult> AddPerson(PersonDto personDto)
         {
             await _personRepository.AddPerson(personDto);
-            //return View(data);
             return RedirectToAction("Index");
         }
     }

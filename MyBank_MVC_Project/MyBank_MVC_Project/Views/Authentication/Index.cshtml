@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Authentication Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Auth </h1>
+    <form asp-action="Index" asp-controller="Authentication" method="post">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input class="form-control m-4" type="email" placeholder="Email" name="email" required />
+                        <input class="form-control m-4" type="password" placeholder="Password" name="password" required />
+                        <button class="btn btn-primary mt-4" type="submit">Login</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>

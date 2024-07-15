@@ -10,7 +10,7 @@ namespace MyBank_MVC_Project.Repository
 {
     public class AccountRepository : IAccountRepository
     {
-        private readonly MyBankDbContext myBankDbContext;
+        private MyBankDbContext myBankDbContext;
         private readonly IMapper _mapper;
         private readonly ILogger<AccountRepository> _logger;
         private readonly IMailService mailService;
@@ -149,11 +149,10 @@ namespace MyBank_MVC_Project.Repository
         private async Task<bool> TransactionTypeFundsTransfer(TransactionDto transactionDto)
         {
             using var DBtransaction = myBankDbContext.Database.BeginTransaction();
-
             try
             {
-                var fromAccount = await myBankDbContext.Account.FirstOrDefaultAsync(a => a.Id == transactionDto.FromAccountId);
-                var toAccount = await myBankDbContext.Account.FirstOrDefaultAsync(a => a.Id == transactionDto.ToAccountId);
+                var fromAccount = myBankDbContext.Account.FirstOrDefault(a => a.Id == transactionDto.FromAccountId);
+                var toAccount = myBankDbContext.Account.FirstOrDefault(a => a.Id == transactionDto.ToAccountId);
 
                 if (fromAccount == null || toAccount == null)
                 {
@@ -177,8 +176,11 @@ namespace MyBank_MVC_Project.Repository
 
                 var transaction = _mapper.Map<MyTransactions>(transactionDto);
                 transaction.TimeStamp = DateTime.UtcNow;
-                await myBankDbContext.MyTransactions.AddAsync(transaction);
-                await myBankDbContext.SaveChangesAsync();
+                myBankDbContext.MyTransactions.Add(transaction);
+                myBankDbContext.SaveChanges();
+
+                ResetOtpFlag(transactionDto);
+                DBtransaction.Commit();
 
                 var toEmail = (from a in myBankDbContext.Account
                                join p in myBankDbContext.Person on a.PersonId equals p.Id
@@ -195,15 +197,12 @@ namespace MyBank_MVC_Project.Repository
                 { throw new Exception("Email sending err"); }
 
                 _logger.LogInformation($"Transaction FundFransfer done successfull : {transaction}");
-                ResetOtpFlag(transactionDto);
-
-                DBtransaction.Commit();
 
                 return true;
             }
             catch (Exception ex)
             {
-                await DBtransaction.RollbackAsync();
+                DBtransaction.Rollback();
                 _logger.LogError($"Rollback : {ex.Message}", ex);
                 return false;
             }
@@ -215,7 +214,7 @@ namespace MyBank_MVC_Project.Repository
             using var DBtransaction = myBankDbContext.Database.BeginTransaction();
             try
             {
-                var fromAccount = await myBankDbContext.Account.FirstOrDefaultAsync(a => a.Id == transactionDto.FromAccountId);
+                var fromAccount = myBankDbContext.Account.Where(a => a.Id == transactionDto.FromAccountId).First();
 
                 if (fromAccount.Balance < transactionDto.Amount)
                 {
@@ -233,8 +232,11 @@ namespace MyBank_MVC_Project.Repository
 
                 var transaction = _mapper.Map<MyTransactions>(transactionDto);
                 transaction.TimeStamp = DateTime.UtcNow;
-                await myBankDbContext.MyTransactions.AddAsync(transaction);
-                await myBankDbContext.SaveChangesAsync();
+                myBankDbContext.MyTransactions.Add(transaction);
+                myBankDbContext.SaveChanges();
+
+                ResetOtpFlag(transactionDto);
+                DBtransaction.Commit();
 
                 var fromEmail = (from a in myBankDbContext.Account
                                  join p in myBankDbContext.Person on a.PersonId equals p.Id
@@ -245,14 +247,12 @@ namespace MyBank_MVC_Project.Repository
                 if (!emailstatus)
                 { throw new Exception("Email sending err"); }
                 _logger.LogInformation($"Transaction Withdraw done successfull : {transaction}");
-                ResetOtpFlag(transactionDto);
-                DBtransaction.Commit();
 
                 return true;
             }
             catch (Exception ex)
             {
-                await DBtransaction.RollbackAsync();
+                DBtransaction.Rollback();
                 _logger.LogError($"Rollback : {ex.Message}", ex);
                 return false;
             }
@@ -263,7 +263,7 @@ namespace MyBank_MVC_Project.Repository
             using var DBtransaction = myBankDbContext.Database.BeginTransaction();
             try
             {
-                var toAccount = await myBankDbContext.Account.FirstOrDefaultAsync(a => a.Id == transactionDto.ToAccountId);
+                var toAccount = myBankDbContext.Account.Where(x => x.Id == transactionDto.ToAccountId).First();
                 if (toAccount == null)
                 {
                     return false;
@@ -272,10 +272,14 @@ namespace MyBank_MVC_Project.Repository
 
                 var transaction = _mapper.Map<MyTransactions>(transactionDto);
                 transaction.TimeStamp = DateTime.UtcNow;
-                await myBankDbContext.MyTransactions.AddAsync(transaction);
-                await myBankDbContext.SaveChangesAsync();
+                myBankDbContext.MyTransactions.Add(transaction);
+                myBankDbContext.SaveChanges();
 
                 _logger.LogInformation($"Transaction Deposit done successfull : {transaction}");
+
+                ResetOtpFlag(transactionDto);
+
+                DBtransaction.Commit();
 
                 var toEmail = (from a in myBankDbContext.Account
                                join p in myBankDbContext.Person on a.PersonId equals p.Id
@@ -285,14 +289,13 @@ namespace MyBank_MVC_Project.Repository
                 var emailstatus = await mailService.SendDepositEmailAsync(toEmail, transactionDto.Amount, toAccount.Id);
                 if (!emailstatus)
                 { throw new Exception("Email sending err"); }
-                ResetOtpFlag(transactionDto);
-                DBtransaction.Commit();
 
                 return true;
             }
             catch (Exception ex)
             {
-                await DBtransaction.RollbackAsync();
+                DBtransaction.Rollback();
+
                 _logger.LogError($"Rollback : {ex.Message}", ex);
                 return false;
             }
@@ -300,10 +303,9 @@ namespace MyBank_MVC_Project.Repository
 
         private void ResetOtpFlag(TransactionDto transactionDto)
         {
-            var toAccount = myBankDbContext.Account.FirstOrDefault(a => a.Id == transactionDto.ToAccountId);
+            var toAccount = myBankDbContext.Account.Find(transactionDto.ToAccountId);
             toAccount.IsOTPVerify = false;
             toAccount.OTPValue = null;
-            //toAccount.IsOTPUsed = false;
             myBankDbContext.Update(toAccount);
             myBankDbContext.SaveChanges();
         }
@@ -437,7 +439,7 @@ namespace MyBank_MVC_Project.Repository
             }
         }
 
-        public object GetAllTransaction(int pageNumber, int pageSize = 10)
+        public List<MyTransactions> GetAllTransaction(int pageNumber, int pageSize = 10)
         {
             try
             {
@@ -447,13 +449,7 @@ namespace MyBank_MVC_Project.Repository
                     .Take(pageSize)
                     .ToList();
 
-                return new
-                {
-                    TotalCount = myBankDbContext.MyTransactions.Count(),
-                    PageNumber = pageNumber,
-                    PageSize = pageSize,
-                    Transactions = transactions
-                };
+                return transactions;
             }
             catch (Exception)
             {

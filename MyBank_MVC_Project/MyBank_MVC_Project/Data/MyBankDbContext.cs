@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyBank_MVC_Project.Models.Account;
-using System;
 
 namespace MyBank_MVC_Project.Data
 {
@@ -50,6 +49,7 @@ namespace MyBank_MVC_Project.Data
         public DbSet<Person> Person { get; set; }
         public DbSet<Account> Account { get; set; }
         public DbSet<MyTransactions> MyTransactions { get; set; }
+        public DbSet<MyBank_MVC_Project.Models.Dto.TransactionDto> TransactionDto { get; set; } = default!;
 
     }
 }

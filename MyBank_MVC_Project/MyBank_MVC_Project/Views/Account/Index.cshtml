@@ -36,10 +36,6 @@
             <tbody>
                 <tr>
                     <td>
-@* 
-                        <input class="form-control mt-4" type="number" placeholder="Account Number" name="accountno" asp-for="Id" required />
-                        <input class="form-control mt-4" type="text" placeholder="OTP Value" name="otpvalue" asp-for="OTPValue" required /> *@
-                       
                         <input class="form-control mt-4" type="number" placeholder="Account Number" name="AccountNumber" required />
                         <input class="form-control mt-4" type="text" placeholder="OTP Value" name="OtpValue" required />
 
@@ -50,14 +46,31 @@
         </table>
     </form>
 
-    <table>
-        <tbody>
-            <tr>
-                <td>
-                    <a asp-controller="Account" asp-action="GetAllTransactions" class="btn btn-primary">Get All Transactions</a>
-                    <a asp-controller="Account" asp-action="MakeTransaction" class="btn btn-primary">Make Transaction</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <form asp-action="GetAllTransactions" asp-controller="Account" method="post">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input class="form-control mt-4" type="number" placeholder="Page Number" name="pageNumber" required />
+                        <input class="form-control mt-4" type="number" placeholder="Page Size [Default is 10]" name="PageSize" pageSize />
+
+                        <button asp-controller="Account" asp-action="GetAllTransactions" class="btn btn-primary mt-4" type="submit">GetAllTransactions</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <form asp-action="MakeTransaction" asp-controller="Account" method="post">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>
+                        <button asp-controller="Account" asp-action="MakeTransaction" class="btn btn-primary mt-4" type="submit">Make Transaction</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
 </div>

@@ -30,7 +30,7 @@ namespace MyBank_MVC_Project.Controllers
                 ViewData["ErrorMessage"] = "An unexpected error occurred.";
             }
 
-            return RedirectToAction("Index");
+            return View("Index");
         }
        
         public IActionResult VerifyOTP(OTPDto oTPDto)
@@ -46,17 +46,25 @@ namespace MyBank_MVC_Project.Controllers
                 ViewData["ErrorMessage"] = "An unexpected error occurred.";
             }
 
-            return RedirectToAction("Index");
+            return View("Index");
 
         }
 
-        public IActionResult GetAllTransactions()
+        public IActionResult GetAllTransactions(int pageNumber, int pageSize)
         {
-            return View();
+            var data = _accountRepository.GetAllTransaction(pageNumber, pageSize);
+            return View(data);
         }
 
-        public IActionResult MakeTransaction()
+        public IActionResult MakeTransaction(TransactionDto transactionDto)
         {
+            var result = _accountRepository.AddTransaction(transactionDto);
+
+            if (result == null)
+            {
+                ViewData["ErrorMessage"] = "An unexpected error occurred.";
+                return View("Index");
+            }
             return View();
         }
     }

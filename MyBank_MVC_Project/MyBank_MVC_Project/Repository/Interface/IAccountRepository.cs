@@ -1,4 +1,5 @@
-﻿using MyBank_MVC_Project.Models.Dto;
+﻿using MyBank_MVC_Project.Models.Account;
+using MyBank_MVC_Project.Models.Dto;
 
 namespace MyBank_MVC_Project.Repository.Interface
 {
@@ -10,6 +11,6 @@ namespace MyBank_MVC_Project.Repository.Interface
         Task<object> AddTransaction(TransactionDto transactionDto);
         Task<object> GenerateOtp(int AccountNumber);
         public bool VerifyOtp(OTPDto oTPDto);
-        public object GetAllTransaction(int pageNumber, int pageSize);
+        public List<MyTransactions> GetAllTransaction(int pageNumber, int pageSize);
     }
 }
