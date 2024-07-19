@@ -32,7 +32,7 @@ namespace Expense_Tracker.Controllers
         }
 
         [HttpGet("GetExpenseByFilter")]
-        public async Task<ActionResult<ExpenseDto>> GetExpenseByFilter(ExpenseFilterDto expenseFilterDto)
+        public async Task<ActionResult<List<ExpenseDto>>> GetExpenseDataByFilter([FromQuery]ExpenseFilterDto expenseFilterDto)
         {
             try
             {

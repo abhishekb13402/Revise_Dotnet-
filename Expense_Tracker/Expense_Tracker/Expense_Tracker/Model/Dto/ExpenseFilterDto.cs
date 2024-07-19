@@ -2,7 +2,9 @@
 {
     public class ExpenseFilterDto
     {
-        public ExpenseType ExpenseType { get; set; }
+        public DateOnly? StartDate { get; set; } //2024-07-19
+        public DateOnly? EndDate { get; set; } //2024-07-19
+        public ExpenseType? ExpenseType { get; set; }
     }
 
     public enum ExpenseType

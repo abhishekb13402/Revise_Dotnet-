@@ -42,12 +42,54 @@ namespace Expense_Tracker.Repository
                 expenseTrackerDBContext.Expense.Remove(data);
                 expenseTrackerDBContext.SaveChanges();
                 return true;
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
         }
         public async Task<List<ExpenseDto>> GetExpenseByFilter(ExpenseFilterDto expenseFilterDto)
+        {
+            try
+            {
+                if (expenseFilterDto != null)
+                {
+                    var currentDate = DateTime.Now;
+                    switch (expenseFilterDto.ExpenseType)
+                    {
+
+                        case ExpenseType.Pastweek:
+                            var Pastweekdata = await expenseTrackerDBContext.Expense.Where(e => e.ExpenseDate >= DateOnly.FromDateTime(currentDate.AddDays(-7))).ToListAsync();
+                            return _mapper.Map<List<ExpenseDto>>(Pastweekdata);
+
+
+                        case ExpenseType.Lastmonth:
+                            var Lastmonthdata = await expenseTrackerDBContext.Expense.Where(e => e.ExpenseDate >= DateOnly.FromDateTime(currentDate.AddMonths(-1))).ToListAsync();
+                            return _mapper.Map<List<ExpenseDto>>(Lastmonthdata);
+
+
+                        case ExpenseType.Last3months:
+                            var Last3monthsdata = await expenseTrackerDBContext.Expense.Where(e => e.ExpenseDate >= DateOnly.FromDateTime(currentDate.AddMonths(-3))).ToListAsync();
+                            return _mapper.Map<List<ExpenseDto>>(Last3monthsdata);
+
+                        case ExpenseType.Custom:
+                            var Customdata = await expenseTrackerDBContext.Expense.Where(e => e.ExpenseDate >= expenseFilterDto.StartDate && e.ExpenseDate <= expenseFilterDto.EndDate).ToListAsync();
+                            return _mapper.Map<List<ExpenseDto>>(Customdata);
+
+
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public async Task<List<ExpenseDto>> GetAllExpense()
         {
             try
             {
@@ -61,24 +103,11 @@ namespace Expense_Tracker.Repository
                 throw ex;
             }
         }
-        public async Task<List<ExpenseDto>> GetAllExpense()
-        {
-            try
-            {
-                var data = await expenseTrackerDBContext.Expense.ToListAsync();
-                if(data == null) { return null; }
-
-                return _mapper.Map<List<ExpenseDto>>(data);
-            }catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
 
         public async Task<ExpenseDto> GetExpenseById(int Id)
         {
             var data = expenseTrackerDBContext.Expense.FirstOrDefault(a => a.Id == Id);
-            if(data == null) { return null; }
+            if (data == null) { return null; }
 
             return _mapper.Map<ExpenseDto>(data);
         }

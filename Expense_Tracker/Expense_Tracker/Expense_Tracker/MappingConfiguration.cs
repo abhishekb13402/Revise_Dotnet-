@@ -13,7 +13,6 @@ namespace Expense_Tracker
                 configurationExpression.CreateMap<Person, PersonDto>().ReverseMap();
                 configurationExpression.CreateMap<Category, CategoryDto>().ReverseMap();
                 configurationExpression.CreateMap<Expense,ExpenseDto>().ReverseMap();
-                configurationExpression.CreateMap<Expense, ExpenseFilterDto>().ReverseMap();
             });
 
             return mappingConfig;
